@@ -11,13 +11,27 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4 - Infrastructure", "4 - I
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5 - CrossCutting", "5 - CrossCutting", "{9F3A23A1-3C78-4C35-BF7E-563035C3DB80}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain.Tests", "Domain.Tests\Domain.Tests.csproj", "{DB2AD679-01BC-464C-8FD3-8819DB95F9FA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain.Tests\Domain\Domain.csproj", "{64FDA536-1ED9-4BFC-AD5D-FD5B31A65544}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DB2AD679-01BC-464C-8FD3-8819DB95F9FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB2AD679-01BC-464C-8FD3-8819DB95F9FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB2AD679-01BC-464C-8FD3-8819DB95F9FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB2AD679-01BC-464C-8FD3-8819DB95F9FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{64FDA536-1ED9-4BFC-AD5D-FD5B31A65544}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64FDA536-1ED9-4BFC-AD5D-FD5B31A65544}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64FDA536-1ED9-4BFC-AD5D-FD5B31A65544}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64FDA536-1ED9-4BFC-AD5D-FD5B31A65544}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{DB2AD679-01BC-464C-8FD3-8819DB95F9FA} = {C96D8678-9490-425D-B252-3DAD492E444D}
+		{64FDA536-1ED9-4BFC-AD5D-FD5B31A65544} = {C96D8678-9490-425D-B252-3DAD492E444D}
 	EndGlobalSection
 EndGlobal
