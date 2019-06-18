@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Application.DTO;
 using Application.ExternalServices;
@@ -19,15 +20,22 @@ namespace Infra.ExternalServices
 
         public async Task<PostalCodeDto> GetCityNameByPostalCodeAsync(string postalCode)
         {
-            var request = new HttpRequestMessage(HttpMethod.Get, $"{RequestUri}/{postalCode}/json");
+            try
+            {
+                var request = new HttpRequestMessage(HttpMethod.Get, $"{RequestUri}/{postalCode}/json");
 
-            var client = ClientFactory.CreateClient();
+                var client = ClientFactory.CreateClient();
 
-            var response = await client.SendAsync(request);
+                var response = await client.SendAsync(request);
 
-            if (!response.IsSuccessStatusCode) return new PostalCodeDto { HasFailed = true };
+                if (!response.IsSuccessStatusCode) return new PostalCodeDto { HasFailed = true };
 
-            return await response.Content.ReadAsAsync<PostalCodeDto>();
+                return await response.Content.ReadAsAsync<PostalCodeDto>();
+            }
+            catch (Exception e)
+            {
+                return new PostalCodeDto { HasFailed = true };
+            }
         }
     }
 }
