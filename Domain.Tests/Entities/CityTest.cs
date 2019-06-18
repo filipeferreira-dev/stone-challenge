@@ -1,6 +1,6 @@
-﻿using NUnit.Framework;
+﻿using Domain.Entities;
 using FluentAssertions;
-using Domain.Entities;
+using NUnit.Framework;
 using System;
 
 namespace Domain.Tests.Entities
@@ -19,6 +19,7 @@ namespace Domain.Tests.Entities
             city.CreatedOn.Should().BeOnOrBefore(DateTime.Now);
             city.PostalCode.Should().Be(postalCode);
             city.Name.Should().Be(cityName);
+            city.IsDeleted.Should().BeFalse();
         }
 
     }
