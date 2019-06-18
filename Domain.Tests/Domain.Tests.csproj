@@ -7,14 +7,39 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="nunit" Version="3.11.0" />
-    <PackageReference Include="NUnit3TestAdapter" Version="3.11.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
+    <PackageReference Include="nunit" Version="3.12.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.13.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.1.1" />
     <PackageReference Include="FluentAssertions" Version="5.7.0" />
     <PackageReference Include="Faker.Net" Version="1.1.1" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Entities\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Domain\bin\Debug\netstandard2.0\Domain.deps.json" />
+    <None Remove="Domain\bin\Debug\netstandard2.0\Domain.dll" />
+    <None Remove="Domain\obj\Domain.csproj.nuget.cache" />
+    <None Remove="Domain\obj\Domain.csproj.nuget.dgspec.json" />
+    <None Remove="Domain\obj\Domain.csproj.nuget.g.props" />
+    <None Remove="Domain\obj\Domain.csproj.nuget.g.targets" />
+    <None Remove="Domain\obj\project.assets.json" />
+    <None Remove="Domain\obj\Debug\netstandard2.0\Domain.AssemblyInfoInputs.cache" />
+    <None Remove="Domain\obj\Debug\netstandard2.0\Domain.assets.cache" />
+    <None Remove="Domain\obj\Debug\netstandard2.0\Domain.csproj.CoreCompileInputs.cache" />
+    <None Remove="Domain\obj\Debug\netstandard2.0\Domain.csproj.FileListAbsolute.txt" />
+    <None Remove="Domain\obj\Debug\netstandard2.0\Domain.csprojAssemblyReference.cache" />
+    <None Remove="Domain\obj\Debug\netstandard2.0\Domain.dll" />
+    <None Remove="Domain\obj\Debug\netstandard2.0\Domain.pdb" />
+    <None Remove="Domain\bin\Debug\netstandard2.0\Domain.pdb" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Domain\Entities\City.cs" />
+    <Compile Remove="Domain\Repositories\ICityRepository.cs" />
+    <Compile Remove="Domain\obj\Debug\netstandard2.0\Domain.AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Domain\Domain.csproj" />
   </ItemGroup>
 </Project>

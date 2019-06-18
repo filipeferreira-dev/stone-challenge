@@ -4,7 +4,7 @@ namespace Domain.Entities
 {
     public class City
     {
-        public Guid Key { get; private set; }
+        public Guid Key { get; private set; } = Guid.NewGuid();
 
         public string Name { get; private set; }
 
@@ -12,9 +12,8 @@ namespace Domain.Entities
 
         public DateTime CreatedOn { get; private set; } = DateTime.Now;
 
-        public City(Guid key, string name, string postalCode)
+        public City(string name, string postalCode)
         {
-            Key = key;
             Name = name;
             PostalCode = postalCode;
         }
