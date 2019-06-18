@@ -12,6 +12,10 @@ namespace Domain.Entities
 
         public DateTime CreatedOn { get; private set; } = DateTime.Now;
 
+        public DateTime? DeletedAt { get; private set; }
+
+        public bool IsDeleted => DeletedAt.HasValue;
+
         public City(string name, string postalCode)
         {
             Name = name;
