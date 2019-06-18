@@ -1,10 +1,10 @@
-﻿using System.Threading.Tasks;
-using Application.DTO;
+﻿using Application.DTO;
+using System.Threading.Tasks;
 
 namespace Application.Services.Interfaces
 {
     public interface ICityService
     {
-        Task<ResponseDto> AddCityAsync(string postalCode);
+        Task<AddCityResponseDto> AddCityAsync(string postalCode);
     }
 }

@@ -7,7 +7,6 @@
   <ItemGroup>
     <Folder Include="Services\" />
     <Folder Include="ExternalServices\" />
-    <Folder Include="DTO\" />
     <Folder Include="Services\Interfaces\" />
   </ItemGroup>
   <ItemGroup>

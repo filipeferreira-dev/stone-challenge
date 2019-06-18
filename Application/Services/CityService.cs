@@ -1,11 +1,11 @@
-﻿using System;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using Application.DTO;
+﻿using Application.DTO;
 using Application.ExternalServices;
 using Application.Services.Interfaces;
 using Domain.Entities;
 using Domain.Repositories;
+using System;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace Application.Services
 {
@@ -21,21 +21,31 @@ namespace Application.Services
             CityRepository = cityRepository ?? throw new ArgumentNullException(nameof(ICityRepository));
         }
 
-        public async Task<ResponseDto> AddCityAsync(string postalCode)
+        public async Task<AddCityResponseDto> AddCityAsync(string postalCode)
         {
             var regex = new Regex(@"^\d{5}-\d{3}$");
 
-            if (!regex.IsMatch(postalCode)) return new ResponseDto { Success = false, Message = "Invalid postal code." };
+            if (!regex.IsMatch(postalCode)) return new AddCityResponseDto { Success = false, Message = "Invalid postal code." };
 
             var postalCodeResponse = await PostalCodeService.GetCityNameByPostalCodeAsync(postalCode);
 
-            if (postalCodeResponse.HasFailed) return new ResponseDto { Success = false, Message = "Failed on try get city name." };
+            if (postalCodeResponse.HasFailed) return new AddCityResponseDto { Success = false, Message = "Failed on try get city name." };
 
             var city = new City(postalCodeResponse.CityName, postalCode);
 
             await CityRepository.AddAsync(city);
 
-            return new ResponseDto { Success = true };
+            return new AddCityResponseDto
+            {
+                Data = new CityDto
+                {
+                    Key = city.Key.ToString(),
+                    Name = city.Name,
+                    PostalCode = city.PostalCode,
+                    CreatedOn = city.CreatedOn.ToUniversalTime().ToString() //todo: formato incorreto
+                },
+                Success = true
+            };
         }
     }
 }
