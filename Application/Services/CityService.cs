@@ -48,9 +48,16 @@ namespace Application.Services
             };
         }
 
-        public Task<ResponseDto> RemoveAsync(Guid key)
+        public async Task<ResponseDto> RemoveAsync(string key)
         {
-            
+            if (!Guid.TryParse(key, out Guid keyGuid)) return new ResponseDto { Success = false };
+
+            var city = await CityRepository.GetByKey(keyGuid);
+
+            if (city == null || !city.Delete()) return new ResponseDto { Success = false };
+
+            await CityRepository.RemoveAsync(city);
+            return new ResponseDto { Success = true };
         }
     }
 }

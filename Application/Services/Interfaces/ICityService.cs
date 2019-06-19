@@ -1,5 +1,4 @@
 ﻿using Application.DTO;
-using System;
 using System.Threading.Tasks;
 
 namespace Application.Services.Interfaces
@@ -8,7 +7,6 @@ namespace Application.Services.Interfaces
     {
         Task<AddCityResponseDto> AddCityAsync(string postalCode);
 
-        Task<ResponseDto> RemoveAsync(Guid key);
-
+        Task<ResponseDto> RemoveAsync(string key);
     }
 }

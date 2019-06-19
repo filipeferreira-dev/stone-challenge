@@ -30,5 +30,13 @@ namespace Domain.Entities
             CreatedOn = createdOn;
             DeletedAt = deletedAt;
         }
+
+        public bool Delete()
+        {
+            if (IsDeleted) return false;
+
+            DeletedAt = DateTime.UtcNow;
+            return true;
+        }
     }
 }

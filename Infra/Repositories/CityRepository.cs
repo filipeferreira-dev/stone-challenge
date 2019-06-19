@@ -64,11 +64,11 @@ namespace Infra.Repositories
                 if (await reader.ReadAsync())
                 {
                     return new City(
-                                    new Guid(Convert.ToString(reader["Key"])),
-                                    Convert.ToString(reader["Name"]),
-                                    Convert.ToString(reader["PostalCode"]),
-                                    Convert.ToDateTime(reader["CreatedOn"]),
-                                    DateTime.TryParse((string)reader["CreatedOn"], out DateTime deletedAt) ? deletedAt : new DateTime?()
+                                    reader.GetGuid(reader.GetOrdinal("Key")),
+                                    reader.GetString(reader.GetOrdinal("Name")),
+                                    reader.GetString(reader.GetOrdinal("PostalCode")),
+                                    reader.GetDateTime(reader.GetOrdinal("CreatedOn")),
+                                    await reader.IsDBNullAsync(reader.GetOrdinal("DeletedAt")) ? new DateTime?() : reader.GetDateTime(reader.GetOrdinal("DeletedAt"))
                                     );
                 }
 

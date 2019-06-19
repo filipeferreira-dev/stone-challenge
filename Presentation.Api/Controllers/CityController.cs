@@ -1,11 +1,12 @@
 ﻿using Application.DTO;
 using Application.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 
 namespace Presentation.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/cities")]
     [ApiController]
     public class CityController : ControllerBase
     {
@@ -20,7 +21,22 @@ namespace Presentation.Api.Controllers
         [Route("")]
         public async Task<IActionResult> AddCity([FromBody] AddCityRequestDto postalCodeDto)
         {
-            return Ok(await CityService.AddCityAsync(postalCodeDto.PostalCode));
+            var resultDto = await CityService.AddCityAsync(postalCodeDto.PostalCode);
+
+            if (!resultDto.Success) return BadRequest(resultDto);
+
+            return Ok(resultDto);
+        }
+
+        [HttpDelete]
+        [Route("{key}")]
+        public async Task<IActionResult> RemoveAsync(string key)
+        {
+            var resultDto = await CityService.RemoveAsync(key);
+
+            if (!resultDto.Success) return BadRequest(resultDto);
+
+            return Ok(resultDto);
         }
     }
 }
