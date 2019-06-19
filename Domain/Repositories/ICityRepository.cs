@@ -6,5 +6,7 @@ namespace Domain.Repositories
     public interface ICityRepository
     {
         Task AddAsync(City city);
+
+        Task RemoveAsync(City city);
     }
 }

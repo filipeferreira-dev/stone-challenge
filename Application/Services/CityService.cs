@@ -1,12 +1,11 @@
-﻿using Application.DTO;
+﻿using System;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using Application.DTO;
 using Application.ExternalServices;
 using Application.Services.Interfaces;
 using Domain.Entities;
 using Domain.Repositories;
-using System;
-using System.Globalization;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace Application.Services
 {
@@ -47,6 +46,11 @@ namespace Application.Services
                 },
                 Success = true
             };
+        }
+
+        public Task<ResponseDto> RemoveAsync(Guid key)
+        {
+            
         }
     }
 }
