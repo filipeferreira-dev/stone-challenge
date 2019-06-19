@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.Data.SqlClient;
 using System.Threading.Tasks;
 using CrossCutting.Settings;
 using Domain.Entities;
@@ -10,9 +11,7 @@ namespace Infra.Repositories
 {
     public class CityRepository : Repository, ICityRepository
     {
-        public CityRepository(IOptions<ConnectionStrings> connectionStringsOptions) : base(connectionStringsOptions)
-        {
-        }
+        public CityRepository(IOptions<ConnectionStrings> connectionStringsOptions) : base(connectionStringsOptions) { }
 
         public async Task AddAsync(City city)
         {
@@ -20,15 +19,24 @@ namespace Infra.Repositories
 
             using (var connection = GetConnection())
             {
-                var command = connection.CreateCommand();
-                command.CommandText = insertCommand;
-                command.Parameters.Add(CreateParameter("@key", SqlDbType.UniqueIdentifier, city.Key));
-                command.Parameters.Add(CreateParameter("@name", SqlDbType.VarChar, city.Name, 500));
-                command.Parameters.Add(CreateParameter("@postalCode", SqlDbType.VarChar, city.PostalCode, 9));
-                command.Parameters.Add(CreateParameter("@createdOn", SqlDbType.DateTime, city.CreatedOn));
-                connection.Open();
-                command.Prepare();
-                await command.ExecuteNonQueryAsync();
+                try
+                {
+                    using (var command = connection.CreateCommand())
+                    {
+                        command.CommandText = insertCommand;
+                        command.Parameters.Add(CreateParameter("@key", SqlDbType.UniqueIdentifier, city.Key));
+                        command.Parameters.Add(CreateParameter("@name", SqlDbType.VarChar, city.Name, 500));
+                        command.Parameters.Add(CreateParameter("@postalCode", SqlDbType.VarChar, city.PostalCode, 9));
+                        command.Parameters.Add(CreateParameter("@createdOn", SqlDbType.DateTime, city.CreatedOn));
+                        connection.Open();
+                        command.Prepare();
+                        await command.ExecuteNonQueryAsync();
+                    }
+                }
+                finally
+                {
+                    connection.Close();
+                }
             }
         }
 
@@ -38,42 +46,113 @@ namespace Infra.Repositories
 
             using (var connection = GetConnection())
             {
-                var command = connection.CreateCommand();
-                command.CommandText = softDeleteCommand;
-                command.Parameters.Add(CreateParameter("@key", SqlDbType.UniqueIdentifier, city.Key));
-                command.Parameters.Add(CreateParameter("@deletedAt", SqlDbType.DateTime, city.DeletedAt));
-                connection.Open();
-                command.Prepare();
-                await command.ExecuteNonQueryAsync();
+                try
+                {
+                    using (var command = connection.CreateCommand())
+                    {
+                        command.CommandText = softDeleteCommand;
+                        command.Parameters.Add(CreateParameter("@key", SqlDbType.UniqueIdentifier, city.Key));
+                        command.Parameters.Add(CreateParameter("@deletedAt", SqlDbType.DateTime, city.DeletedAt));
+                        connection.Open();
+                        command.Prepare();
+                        await command.ExecuteNonQueryAsync();
+                    }
+                }
+                finally
+                {
+                    connection.Close();
+                }
             }
         }
 
-        public async Task<City> GetByKey(Guid key)
+        public async Task<City> GetByKeyAsync(Guid key)
         {
-            const string softDeleteCommand = @"select [Key], [Name], [PostalCode], [CreatedOn], [DeletedAt] from City where [Key] = @key";
+            const string getByKeyCommand =
+                @"select [Key], [Name], [PostalCode], [CreatedOn], [DeletedAt] from City where [Key] = @key and [DeleteAt] is null";
 
             using (var connection = GetConnection())
             {
-                var command = connection.CreateCommand();
-                command.CommandText = softDeleteCommand;
-                command.Parameters.Add(CreateParameter("@key", SqlDbType.UniqueIdentifier, key));
-                connection.Open();
-                command.Prepare();
-                var reader = await command.ExecuteReaderAsync();
-
-                if (await reader.ReadAsync())
+                try
                 {
-                    return new City(
-                                    reader.GetGuid(reader.GetOrdinal("Key")),
-                                    reader.GetString(reader.GetOrdinal("Name")),
-                                    reader.GetString(reader.GetOrdinal("PostalCode")),
-                                    reader.GetDateTime(reader.GetOrdinal("CreatedOn")),
-                                    await reader.IsDBNullAsync(reader.GetOrdinal("DeletedAt")) ? new DateTime?() : reader.GetDateTime(reader.GetOrdinal("DeletedAt"))
-                                    );
-                }
+                    using (var command = connection.CreateCommand())
+                    {
+                        command.CommandText = getByKeyCommand;
+                        command.Parameters.Add(CreateParameter("@key", SqlDbType.UniqueIdentifier, key));
+                        connection.Open();
+                        command.Prepare();
 
-                return null;
+                        using (var reader = await command.ExecuteReaderAsync())
+                        {
+                            try
+                            {
+                                if (await reader.ReadAsync()) return await MapToCityAsync(reader);
+                            }
+                            finally
+                            {
+                                reader.Close();
+                            }
+                        }
+
+                        return null;
+                    }
+                }
+                finally
+                {
+                    connection.Close();
+                }
             }
+        }
+
+        public async Task<City> GetByPostalCodeAsync(string postalCode)
+        {
+            const string GetByPostalCodeCommand =
+                @"select [Key], [Name], [PostalCode], [CreatedOn], [DeletedAt] from City where [PostalCode] = @postalCode and [DeletedAt] is null";
+
+            using (var connection = GetConnection())
+            {
+                try
+                {
+                    using (var command = connection.CreateCommand())
+                    {
+                        command.CommandText = GetByPostalCodeCommand;
+                        command.Parameters.Add(CreateParameter("@postalCode", SqlDbType.UniqueIdentifier, postalCode));
+                        connection.Open();
+                        command.Prepare();
+
+                        using (var reader = await command.ExecuteReaderAsync())
+                        {
+                            try
+                            {
+                                if (await reader.ReadAsync()) return await MapToCityAsync(reader);
+                            }
+                            finally
+                            {
+                                reader.Close();
+                            }
+                        }
+
+                        return null;
+                    }
+                }
+                finally
+                {
+                    connection.Close();
+                }
+            }
+        }
+
+        private async Task<City> MapToCityAsync(SqlDataReader reader)
+        {
+            return new City(
+                            reader.GetGuid(reader.GetOrdinal("Key")),
+                            reader.GetString(reader.GetOrdinal("Name")),
+                            reader.GetString(reader.GetOrdinal("PostalCode")),
+                            reader.GetDateTime(reader.GetOrdinal("CreatedOn")),
+                            await reader.IsDBNullAsync(reader.GetOrdinal("DeletedAt")) ?
+                                new DateTime?() :
+                                reader.GetDateTime(reader.GetOrdinal("DeletedAt"))
+                            );
         }
     }
 }
+

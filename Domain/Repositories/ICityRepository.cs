@@ -10,6 +10,6 @@ namespace Domain.Repositories
 
         Task RemoveAsync(City city);
 
-        Task<City> GetByKey(Guid key);
+        Task<City> GetByKeyAsync(Guid key);
     }
 }

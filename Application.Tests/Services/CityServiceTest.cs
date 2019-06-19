@@ -43,5 +43,13 @@ namespace Application.Tests.Services
 
             result.Success.Should().BeTrue();
         }
+
+        [Test(Description = "Should return false on try add a city with invalid postalCode")]
+        public async Task OnAddCityAsyncWithInvalidPostalCode()
+        {
+            var result = await CityService.AddCityAsync(Faker.Lorem.GetFirstWord());
+
+            result.Success.Should().BeFalse();
+        }
     }
 }

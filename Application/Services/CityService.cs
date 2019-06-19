@@ -52,7 +52,7 @@ namespace Application.Services
         {
             if (!Guid.TryParse(key, out Guid keyGuid)) return new ResponseDto { Success = false, Message = "Invalid key" };
 
-            var city = await CityRepository.GetByKey(keyGuid);
+            var city = await CityRepository.GetByKeyAsync(keyGuid);
 
             if (city == null) return new ResponseDto { Success = false, Message = "City not found" };
             if (!city.Delete()) return new ResponseDto { Success = false, Message = "City is already removed" };
