@@ -10,7 +10,7 @@ namespace Domain.Entities
 
         public string PostalCode { get; private set; }
 
-        public DateTime CreatedOn { get; private set; } = DateTime.Now;
+        public DateTime CreatedOn { get; private set; } = DateTime.UtcNow;
 
         public DateTime? DeletedAt { get; private set; }
 

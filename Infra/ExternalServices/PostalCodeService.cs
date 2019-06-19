@@ -33,7 +33,7 @@ namespace Infra.ExternalServices
                 if (!response.IsSuccessStatusCode) return new PostalCodeDto { HasFailed = true };
                 return await response.Content.ReadAsAsync<PostalCodeDto>();
             }
-            catch (Exception e)
+            catch
             {
                 return new PostalCodeDto { HasFailed = true };
             }

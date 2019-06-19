@@ -20,9 +20,7 @@ namespace Presentation.Api.Controllers
         [Route("")]
         public async Task<IActionResult> AddCity([FromBody] AddCityRequestDto postalCodeDto)
         {
-            //TODO: AJUSTAR
-            var r = await CityService.AddCityAsync(postalCodeDto.PostalCode);
-            return null;
+            return Ok(await CityService.AddCityAsync(postalCodeDto.PostalCode));
         }
     }
 }

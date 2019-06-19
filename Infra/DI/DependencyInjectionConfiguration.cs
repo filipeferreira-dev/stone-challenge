@@ -19,7 +19,10 @@ namespace Infra.DI
     }
     public static class ServiceColletionExtensions
     {
-        public static void SetupDependencyInjection(this IServiceCollection serviceColletion)
-            => DependencyInjectionConfiguration.Setup(serviceColletion);
+        public static IServiceCollection SetupDependencyInjection(this IServiceCollection serviceColletion)
+        {
+            DependencyInjectionConfiguration.Setup(serviceColletion);
+            return serviceColletion;
+        }
     }
 }

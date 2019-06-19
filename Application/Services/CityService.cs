@@ -4,6 +4,7 @@ using Application.Services.Interfaces;
 using Domain.Entities;
 using Domain.Repositories;
 using System;
+using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -42,7 +43,7 @@ namespace Application.Services
                     Key = city.Key.ToString(),
                     Name = city.Name,
                     PostalCode = city.PostalCode,
-                    CreatedOn = city.CreatedOn.ToUniversalTime().ToString() //todo: formato incorreto
+                    CreatedOn = city.CreatedOn.ToString("s")
                 },
                 Success = true
             };
