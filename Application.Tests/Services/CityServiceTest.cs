@@ -42,6 +42,19 @@ namespace Application.Tests.Services
             var result = await CityService.AddCityAsync("22743-011");
 
             result.Success.Should().BeTrue();
+            result.Data.Should().NotBeNull();
+            result.Data.CreatedOn.Length.Should().Be(19);
+        }
+
+        [Test(Description = "Should return false on try add a city twice")]
+        public async Task OnAddCityAsyncTwice()
+        {
+            var city = Builder<City>.CreateNew().Build();
+            CityRepository.GetByPostalCodeAsync(Arg.Any<string>()).Returns(city);
+
+            var result = await CityService.AddCityAsync("22743-011");
+
+            result.Success.Should().BeFalse();
         }
 
         [Test(Description = "Should return false on try add a city with invalid postalCode")]

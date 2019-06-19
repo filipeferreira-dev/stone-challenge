@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Domain.Entities;
+using System;
 using System.Threading.Tasks;
-using Domain.Entities;
 
 namespace Domain.Repositories
 {
@@ -11,5 +11,7 @@ namespace Domain.Repositories
         Task RemoveAsync(City city);
 
         Task<City> GetByKeyAsync(Guid key);
+
+        Task<City> GetByPostalCodeAsync(string postalCode);
     }
 }

@@ -68,7 +68,7 @@ namespace Infra.Repositories
         public async Task<City> GetByKeyAsync(Guid key)
         {
             const string getByKeyCommand =
-                @"select [Key], [Name], [PostalCode], [CreatedOn], [DeletedAt] from City where [Key] = @key and [DeleteAt] is null";
+                @"select [Key], [Name], [PostalCode], [CreatedOn], [DeletedAt] from City where [Key] = @key and [DeletedAt] is null";
 
             using (var connection = GetConnection())
             {
@@ -115,7 +115,7 @@ namespace Infra.Repositories
                     using (var command = connection.CreateCommand())
                     {
                         command.CommandText = GetByPostalCodeCommand;
-                        command.Parameters.Add(CreateParameter("@postalCode", SqlDbType.UniqueIdentifier, postalCode));
+                        command.Parameters.Add(CreateParameter("@postalCode", SqlDbType.VarChar, postalCode, 9));
                         connection.Open();
                         command.Prepare();
 

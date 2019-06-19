@@ -27,11 +27,14 @@ namespace Application.Services
 
             if (!regex.IsMatch(postalCode)) return new AddCityResponseDto { Success = false, Message = "Invalid postal code." };
 
+            var city = await CityRepository.GetByPostalCodeAsync(postalCode);
+
+            if(city != null ) return new AddCityResponseDto { Success = false, Message = "Postal code already added." };
             var postalCodeResponse = await PostalCodeService.GetCityNameByPostalCodeAsync(postalCode);
 
             if (postalCodeResponse.HasFailed) return new AddCityResponseDto { Success = false, Message = "Failed on try get city name." };
 
-            var city = new City(postalCodeResponse.CityName, postalCode);
+            city = new City(postalCodeResponse.CityName, postalCode);
 
             await CityRepository.AddAsync(city);
 
@@ -50,12 +53,12 @@ namespace Application.Services
 
         public async Task<ResponseDto> RemoveAsync(string key)
         {
-            if (!Guid.TryParse(key, out Guid keyGuid)) return new ResponseDto { Success = false, Message = "Invalid key" };
+            if (!Guid.TryParse(key, out Guid keyGuid)) return new ResponseDto { Success = false, Message = "Invalid key." };
 
             var city = await CityRepository.GetByKeyAsync(keyGuid);
 
-            if (city == null) return new ResponseDto { Success = false, Message = "City not found" };
-            if (!city.Delete()) return new ResponseDto { Success = false, Message = "City is already removed" };
+            if (city == null) return new ResponseDto { Success = false, Message = "City not found." };
+            if (!city.Delete()) return new ResponseDto { Success = false, Message = "City is already removed." };
 
             await CityRepository.RemoveAsync(city);
             return new ResponseDto { Success = true };
