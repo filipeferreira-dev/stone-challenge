@@ -16,6 +16,9 @@ namespace Domain.Entities
 
         public bool IsDeleted => DeletedAt.HasValue;
 
+        [Obsolete("Creted for tests purpose", true)]
+        public City() { }
+
         public City(string name, string postalCode)
         {
             Name = name;
