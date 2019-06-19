@@ -50,11 +50,12 @@ namespace Application.Services
 
         public async Task<ResponseDto> RemoveAsync(string key)
         {
-            if (!Guid.TryParse(key, out Guid keyGuid)) return new ResponseDto { Success = false };
+            if (!Guid.TryParse(key, out Guid keyGuid)) return new ResponseDto { Success = false, Message = "Invalid key" };
 
             var city = await CityRepository.GetByKey(keyGuid);
 
-            if (city == null || !city.Delete()) return new ResponseDto { Success = false };
+            if (city == null) return new ResponseDto { Success = false, Message = "City not found" };
+            if (!city.Delete()) return new ResponseDto { Success = false, Message = "City is already removed" };
 
             await CityRepository.RemoveAsync(city);
             return new ResponseDto { Success = true };

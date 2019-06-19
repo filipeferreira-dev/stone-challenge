@@ -1,7 +1,6 @@
 ﻿using Application.DTO;
 using Application.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Threading.Tasks;
 
 namespace Presentation.Api.Controllers
