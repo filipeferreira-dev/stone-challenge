@@ -58,10 +58,30 @@ namespace Presentation.Api.Controllers
         }
 
         [HttpGet]
+        [Route("{key}/temperatures")]
+        public async Task<IActionResult> GetCityByKeyWithTemperaturesAsync([FromRoute] Guid key)
+        {
+            var result = await CityService.GetCityByKeyWithTemperaturesAsync(key);
+
+            if (result.Success.HasValue && !result.Success.Value) return BadRequest(result);
+            return Ok(result);
+        }
+
+        [HttpGet]
         [Route("temperatures")]
-        public async Task<IActionResult> GetTemperatureAsyncByCity()
+        public async Task<IActionResult> GetAllTemperatureAsyncByCity()
         {
             var result = await CityService.GetAllWithTemperaturesAsync();
+            return Ok(result);
+        }
+
+        [HttpDelete]
+        [Route("{key}/temperatures")]
+        public async Task<IActionResult> RemoveTemperaturesAsync([FromRoute] Guid key)
+        {
+            var result = await CityService.RemoveTemperaturesByCityAsync(key);
+
+            if (result.Success.HasValue && !result.Success.Value) return BadRequest(result);
             return Ok(result);
         }
     }

@@ -12,5 +12,7 @@ namespace Domain.Repositories
         Task<IList<CityTemperature>> GetAllAsync();
 
         Task AddAsync(CityTemperature cityTemperature);
+
+        Task RemoveByCityAsync(Guid cityKey);
     }
 }

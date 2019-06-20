@@ -168,8 +168,18 @@ namespace Application.Services
                     .ToList()
                 })
                 .OrderBy(i => i.City)
-                .ToList(),
+                .ToList()
             };
+        }
+
+        public async Task<ResponseDto> RemoveTemperaturesByCityAsync(Guid cityKey)
+        {
+            var city = await CityRepository.GetByKeyAsync(cityKey);
+            if (city == null) return new ResponseDto { Success = false, Message = "City not found." };
+
+            await CityTemperatureRepository.RemoveByCityAsync(city.Key);
+
+            return new ResponseDto { Success = true };
         }
     }
 }

@@ -17,5 +17,7 @@ namespace Application.Services.Interfaces
         Task<GetCityTemperaturesDto> GetCityByKeyWithTemperaturesAsync(Guid cityKey);
 
         Task<GetAllCityTemperaturesDto> GetAllWithTemperaturesAsync();
+
+        Task<ResponseDto> RemoveTemperaturesByCityAsync(Guid cityKey);
     }
 }

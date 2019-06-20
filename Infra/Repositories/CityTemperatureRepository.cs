@@ -108,6 +108,31 @@ namespace Infra.Repositories
             }
         }
 
+        public async Task RemoveByCityAsync(Guid cityKey)
+        {
+            const string softDeleteCommand = @"update CityTemperature set [DeletedAt] = @deletedAt where [CityKey] = @cityKey";
+
+            using (var connection = GetConnection())
+            {
+                try
+                {
+                    using (var command = connection.CreateCommand())
+                    {
+                        command.CommandText = softDeleteCommand;
+                        command.Parameters.Add(CreateParameter("@cityKey", SqlDbType.UniqueIdentifier, cityKey));
+                        command.Parameters.Add(CreateParameter("@deletedAt", SqlDbType.DateTime, DateTime.UtcNow));
+                        connection.Open();
+                        command.Prepare();
+                        await command.ExecuteNonQueryAsync();
+                    }
+                }
+                finally
+                {
+                    connection.Close();
+                }
+            }
+        }
+
         private CityTemperature MapToCityTemperature(SqlDataReader reader)
             => new CityTemperature
             (

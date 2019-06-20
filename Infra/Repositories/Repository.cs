@@ -10,7 +10,7 @@ namespace Infra.Repositories
     {
         protected ConnectionString ConnectionString { get; }
 
-        public Repository(IOptions<ConnectionStrings> connectionString)
+        protected Repository(IOptions<ConnectionStrings> connectionString)
         {
             ConnectionString = connectionString?.Value?.St ?? throw new ArgumentException(nameof(ConnectionStrings));
         }
