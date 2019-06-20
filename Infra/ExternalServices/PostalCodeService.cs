@@ -1,10 +1,10 @@
-﻿using Application.DTO;
+﻿using System;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Application.DTO;
 using Application.ExternalServices;
 using CrossCutting.Settings;
 using Microsoft.Extensions.Options;
-using System;
-using System.Net.Http;
-using System.Threading.Tasks;
 
 namespace Infra.ExternalServices
 {

@@ -1,4 +1,5 @@
 ﻿using Application.DTO;
+using System;
 using System.Threading.Tasks;
 
 namespace Application.Services.Interfaces
@@ -7,8 +8,10 @@ namespace Application.Services.Interfaces
     {
         Task<AddCityResponseDto> AddCityAsync(string postalCode);
 
-        Task<ResponseDto> RemoveAsync(string key);
+        Task<ResponseDto> RemoveAsync(Guid key);
 
         Task<GetAllCityResponseDto> GetAllAsync(PagingDto paging);
+
+        Task<AddTemperatureResponseDto> AddTemperatureAsync(Guid cityKey, AddTemperatureRequestDto addTemperatureRequestDto);
     }
 }

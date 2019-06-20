@@ -14,7 +14,9 @@ namespace Infra.DI
         {
             serviceCollection.AddTransient<ICityService, CityService>();
             serviceCollection.AddTransient<IPostalCodeService, PostalCodeService>();
+            serviceCollection.AddTransient<IWeatherService, WeatherService>();
             serviceCollection.AddTransient<ICityRepository, CityRepository>();
+            serviceCollection.AddTransient<ICityTemperatureRepository, CityTemperatureRepository>();
         }
     }
     public static class ServiceColletionExtensions

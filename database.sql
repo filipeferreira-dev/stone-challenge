@@ -11,4 +11,14 @@ begin
         [CreatedOn] datetime not null,
         [DeletedAt] datetime null
     )
+
+    create table CityTemperature 
+    (
+        [key] uniqueidentifier constraint pk_city_temperature_key primary key,
+        [CityKey] uniqueidentifier not null constraint fk_city_temperature_city_key foreign key references City([key]),
+        [Temperature] int not null,
+        [CreatedOn] datetime not null,
+        [DeletedAt] datetime null
+    )
+
 END

@@ -2,19 +2,11 @@
 
 namespace Domain.Entities
 {
-    public class City
+    public class City : Entity
     {
-        public Guid Key { get; private set; } = Guid.NewGuid();
-
         public string Name { get; private set; }
 
         public string PostalCode { get; private set; }
-
-        public DateTime CreatedOn { get; private set; } = DateTime.UtcNow;
-
-        public DateTime? DeletedAt { get; private set; }
-
-        public bool IsDeleted => DeletedAt.HasValue;
 
         [Obsolete("Creted for tests purpose", true)]
         public City() { }
@@ -31,14 +23,6 @@ namespace Domain.Entities
             Name = name;
             PostalCode = postalCode;
             CreatedOn = createdOn;
-        }
-
-        public bool Delete()
-        {
-            if (IsDeleted) return false;
-
-            DeletedAt = DateTime.UtcNow;
-            return true;
         }
     }
 }

@@ -16,7 +16,7 @@ namespace Presentation.Api
                 .CreateDefaultBuilder(args)
                 .ConfigureAppConfiguration((hostingContext, config) =>
                 {
-                    config.AddJsonFile("appsettings.json", optional: false);
+                    config.AddJsonFile("appsettings.json", false);
                 })
                 .UseStartup<Startup>();
     }

@@ -31,6 +31,7 @@ namespace Presentation.Api
             services.SetupDependencyInjection();
             services.AddHttpClient();
             services.Configure<PostalCodeServiceSettings>(Configuration.GetSection("PostalCodeServiceSettings"));
+            services.Configure<WeatherServiceSettings>(Configuration.GetSection("WeatherServiceSettings"));
             services.Configure<ConnectionStrings>(Configuration.GetSection("ConnectionStrings"));
 
         }

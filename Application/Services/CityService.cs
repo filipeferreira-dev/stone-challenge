@@ -1,12 +1,12 @@
-﻿using Application.DTO;
+﻿using System;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using Application.DTO;
 using Application.ExternalServices;
 using Application.Services.Interfaces;
 using Domain.Entities;
 using Domain.Repositories;
-using System;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace Application.Services
 {
@@ -16,10 +16,22 @@ namespace Application.Services
 
         ICityRepository CityRepository { get; }
 
-        public CityService(IPostalCodeService postalCodeService, ICityRepository cityRepository)
+        IWeatherService WeatherService { get; }
+
+        ICityTemperatureRepository CityTemperatureRepository { get; }
+
+        public CityService
+            (
+              IPostalCodeService postalCodeService
+            , ICityRepository cityRepository
+            , IWeatherService weatherService
+            , ICityTemperatureRepository cityTemperatureRepository
+            )
         {
             PostalCodeService = postalCodeService ?? throw new ArgumentNullException(nameof(IPostalCodeService));
             CityRepository = cityRepository ?? throw new ArgumentNullException(nameof(ICityRepository));
+            WeatherService = weatherService ?? throw new ArgumentNullException(nameof(IWeatherService));
+            CityTemperatureRepository = cityTemperatureRepository ?? throw new ArgumentNullException(nameof(ICityTemperatureRepository));
         }
 
         public async Task<AddCityResponseDto> AddCityAsync(string postalCode)
@@ -52,11 +64,9 @@ namespace Application.Services
             };
         }
 
-        public async Task<ResponseDto> RemoveAsync(string key)
+        public async Task<ResponseDto> RemoveAsync(Guid key)
         {
-            if (!Guid.TryParse(key, out Guid keyGuid)) return new ResponseDto { Success = false, Message = "Invalid key." };
-
-            var city = await CityRepository.GetByKeyAsync(keyGuid);
+            var city = await CityRepository.GetByKeyAsync(key);
 
             if (city == null) return new ResponseDto { Success = false, Message = "City not found." };
             if (!city.Delete()) return new ResponseDto { Success = false, Message = "City is already removed." };
@@ -88,6 +98,31 @@ namespace Application.Services
                     CreatedOn = city.CreatedOn.ToString("s")
                 }).ToList(),
                 Paging = pagingDto
+            };
+        }
+
+        public async Task<AddTemperatureResponseDto> AddTemperatureAsync(Guid cityKey, AddTemperatureRequestDto addTemperatureRequestDto)
+        {
+            var city = await CityRepository.GetByKeyAsync(cityKey);
+            if (city == null) return new AddTemperatureResponseDto { Success = false, Message = "City not found." };
+
+            var weather = await WeatherService.GetWeatherByCityAsync(city.Name);
+            if (weather.HasFailed) return new AddTemperatureResponseDto { Success = false, Message = "Failed on try get city temperature." };
+
+            var temperature = new CityTemperature(city.Key, weather.Results.Temperature);
+
+            await CityTemperatureRepository.AddAsync(temperature);
+
+            return new AddTemperatureResponseDto
+            {
+                Data = new CityTemperatureDto
+                {
+                    City = city.Name,
+                    Temperature = temperature.Temperature,
+                    CreatedOn = temperature.CreatedOn.ToString("s")
+                },
+
+                Success = true
             };
         }
     }

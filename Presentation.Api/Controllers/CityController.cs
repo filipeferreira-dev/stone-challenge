@@ -1,7 +1,8 @@
-﻿using Application.DTO;
+﻿using System;
+using System.Threading.Tasks;
+using Application.DTO;
 using Application.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 namespace Presentation.Api.Controllers
 {
@@ -18,7 +19,7 @@ namespace Presentation.Api.Controllers
 
         [HttpPost]
         [Route("")]
-        public async Task<IActionResult> AddCity([FromBody] AddCityRequestDto postalCodeDto)
+        public async Task<IActionResult> AddCityAsync([FromBody] AddCityRequestDto postalCodeDto)
         {
             var resultDto = await CityService.AddCityAsync(postalCodeDto.PostalCode);
 
@@ -29,7 +30,7 @@ namespace Presentation.Api.Controllers
 
         [HttpDelete]
         [Route("{key}")]
-        public async Task<IActionResult> RemoveAsync(string key)
+        public async Task<IActionResult> RemoveAsync([FromRoute]Guid key)
         {
             var resultDto = await CityService.RemoveAsync(key);
 
@@ -44,6 +45,16 @@ namespace Presentation.Api.Controllers
         {
             var resultDto = await CityService.GetAllAsync(pagingDto);
             return Ok(resultDto);
+        }
+
+        [HttpPost]
+        [Route("{key}/temperatures")]
+        public async Task<IActionResult> AddTemperatureAsync([FromRoute] Guid key, [FromBody] AddTemperatureRequestDto temperatureRequestDto)
+        {
+            var result = await CityService.AddTemperatureAsync(key, temperatureRequestDto);
+
+            if (!result.Success.Value) return BadRequest(result);
+            return Ok(result);
         }
     }
 }
