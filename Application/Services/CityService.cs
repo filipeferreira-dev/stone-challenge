@@ -69,7 +69,6 @@ namespace Application.Services
             var city = await CityRepository.GetByKeyAsync(key);
 
             if (city == null) return new ResponseDto { Success = false, Message = "City not found." };
-            if (!city.Delete()) return new ResponseDto { Success = false, Message = "City is already removed." };
 
             await CityRepository.RemoveAsync(city);
             return new ResponseDto { Success = true };

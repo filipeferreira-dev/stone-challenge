@@ -1,8 +1,7 @@
-﻿using Domain.Entities;
+﻿using System;
+using Domain.Entities;
 using FluentAssertions;
-using NSubstitute;
 using NUnit.Framework;
-using System;
 
 namespace Domain.Tests.Entities
 {
@@ -36,22 +35,6 @@ namespace Domain.Tests.Entities
             city.Name.Should().Be(cityName);
             city.PostalCode.Should().Be(postalCode);
             city.CreatedOn.Should().Be(createdOn);
-        }
-
-        [Test(Description = "On delete city should set deleteAt date")]
-        public void OnDelete()
-        {
-            var city = Substitute.ForPartsOf<City>();
-            city.Delete().Should().BeTrue();
-            city.DeletedAt.Should().BeBefore(DateTime.UtcNow);
-        }
-
-        [Test(Description = "Should return false on try delete a city twice")]
-        public void OnDeleteTwice()
-        {
-            var city = Substitute.ForPartsOf<City>();
-            city.Delete();
-            city.Delete().Should().BeFalse();
         }
     }
 }
