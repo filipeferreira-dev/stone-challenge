@@ -17,13 +17,18 @@ namespace Application.Tests.Services
         ICityRepository CityRepository { get; set; }
         IPostalCodeService PostalCodeService { get; set; }
         ICityService CityService { get; set; }
+        IWeatherService WeatherService { get; set; }
+        ICityTemperatureRepository CityTemperatureRepository { get; set; }
 
         [SetUp]
         public void SetUp()
         {
             CityRepository = Substitute.For<ICityRepository>();
             PostalCodeService = Substitute.For<IPostalCodeService>();
-            CityService = new CityService(PostalCodeService, CityRepository);
+            WeatherService = Substitute.For<IWeatherService>();
+            CityTemperatureRepository = Substitute.For<ICityTemperatureRepository>();
+
+            CityService = new CityService(PostalCodeService, CityRepository, WeatherService, CityTemperatureRepository);
         }
 
         [Test(Description = "Should add a city successfully")]
