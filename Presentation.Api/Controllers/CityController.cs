@@ -25,7 +25,7 @@ namespace Presentation.Api.Controllers
 
             if (result.Success.HasValue && !result.Success.Value) return BadRequest(result);
 
-            return Ok(result);
+            return Created("api/cities", result);
         }
 
         [HttpDelete]
@@ -54,7 +54,7 @@ namespace Presentation.Api.Controllers
             var result = await CityService.AddTemperatureAsync(key, temperatureRequestDto);
 
             if (result.Success.HasValue && !result.Success.Value) return BadRequest(result);
-            return Ok(result);
+            return Created($"api/cities/{key.ToString()}/temperatures",result);
         }
 
         [HttpGet]
