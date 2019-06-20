@@ -25,13 +25,12 @@ namespace Domain.Entities
             PostalCode = postalCode;
         }
 
-        public City(Guid key, string name, string postalCode, DateTime createdOn, DateTime? deletedAt)
+        public City(Guid key, string name, string postalCode, DateTime createdOn)
         {
             Key = key;
             Name = name;
             PostalCode = postalCode;
             CreatedOn = createdOn;
-            DeletedAt = deletedAt;
         }
 
         public bool Delete()

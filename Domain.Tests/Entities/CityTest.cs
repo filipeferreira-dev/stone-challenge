@@ -29,16 +29,13 @@ namespace Domain.Tests.Entities
             var cityName = Faker.Address.City();
             var postalCode = Faker.Address.ZipCode();
             var createdOn = DateTime.Now.AddMonths(-10);
-            var deletedAt = DateTime.Now.AddMonths(-1);
 
-            var city = new City(key, cityName, postalCode, createdOn, deletedAt);
+            var city = new City(key, cityName, postalCode, createdOn);
 
             city.Key.Should().Be(key);
             city.Name.Should().Be(cityName);
             city.PostalCode.Should().Be(postalCode);
             city.CreatedOn.Should().Be(createdOn);
-            city.DeletedAt.Should().Be(deletedAt);
-            city.IsDeleted.Should().BeTrue();
         }
 
         [Test(Description = "On delete city should set deleteAt date")]

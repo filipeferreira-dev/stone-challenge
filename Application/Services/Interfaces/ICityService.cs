@@ -8,5 +8,7 @@ namespace Application.Services.Interfaces
         Task<AddCityResponseDto> AddCityAsync(string postalCode);
 
         Task<ResponseDto> RemoveAsync(string key);
+
+        Task<GetAllCityResponseDto> GetAllAsync(PagingDto paging);
     }
 }

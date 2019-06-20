@@ -22,7 +22,7 @@ namespace Presentation.Api.Controllers
         {
             var resultDto = await CityService.AddCityAsync(postalCodeDto.PostalCode);
 
-            if (!resultDto.Success) return BadRequest(resultDto);
+            if (!resultDto.Success.Value) return BadRequest(resultDto);
 
             return Ok(resultDto);
         }
@@ -33,8 +33,16 @@ namespace Presentation.Api.Controllers
         {
             var resultDto = await CityService.RemoveAsync(key);
 
-            if (!resultDto.Success) return BadRequest(resultDto);
+            if (!resultDto.Success.Value) return BadRequest(resultDto);
 
+            return Ok(resultDto);
+        }
+
+        [HttpGet]
+        [Route("")]
+        public async Task<IActionResult> GetAllAsync([FromQuery] PagingDto pagingDto)
+        {
+            var resultDto = await CityService.GetAllAsync(pagingDto);
             return Ok(resultDto);
         }
     }
