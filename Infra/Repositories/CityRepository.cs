@@ -179,6 +179,42 @@ namespace Infra.Repositories
             }
         }
 
+        public async Task<IList<City>> GetAllAsync()
+        {
+            string getByAllCommand = $"select [Key], [Name], [PostalCode], [CreatedOn] from City where [DeletedAt] is null";
+
+            using (var connection = GetConnection())
+            {
+                try
+                {
+                    using (var command = connection.CreateCommand())
+                    {
+                        command.CommandText = getByAllCommand;
+                        connection.Open();
+                        command.Prepare();
+
+                        using (var reader = await command.ExecuteReaderAsync())
+                        {
+                            try
+                            {
+                                var list = new List<City>();
+                                while (await reader.ReadAsync()) list.Add(MapToCity(reader));
+                                return list;
+                            }
+                            finally
+                            {
+                                reader.Close();
+                            }
+                        }
+                    }
+                }
+                finally
+                {
+                    connection.Close();
+                }
+            }
+        }
+
         public async Task<int> CountAsync()
         {
             const string countCities = @"select count(1) from City where [DeletedAt] is null";

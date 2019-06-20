@@ -100,7 +100,7 @@ namespace Application.Services
             };
         }
 
-        public async Task<GetCityTemperaturesDto> GetCityByKeyWithTemperatures(Guid cityKey)
+        public async Task<GetCityTemperaturesDto> GetCityByKeyWithTemperaturesAsync(Guid cityKey)
         {
             var city = await CityRepository.GetByKeyAsync(cityKey);
             if (city == null) return new GetCityTemperaturesDto { Success = false, Message = "City not found." };
@@ -109,9 +109,9 @@ namespace Application.Services
 
             return new GetCityTemperaturesDto
             {
-                Data = new CityDto
+                Data = new CityWithTemperatureDto
                 {
-                    Name = city.Name,
+                    City = city.Name,
                     Temperatures = temperatures.Select(t => new CityTemperatureDto
                     {
                         Temperature = t.Temperature,
@@ -144,6 +144,31 @@ namespace Application.Services
                 },
 
                 Success = true
+            };
+        }
+
+        public async Task<GetAllCityTemperaturesDto> GetAllWithTemperaturesAsync()
+        {
+            var citiesTask = CityRepository.GetAllAsync();
+            var temperaturesTask = CityTemperatureRepository.GetAllAsync();
+
+            await Task.WhenAll(citiesTask, temperaturesTask);
+
+            return new GetAllCityTemperaturesDto
+            {
+                Data = citiesTask.Result.Select(city => new CityWithTemperatureDto
+                {
+                    City = city.Name,
+                    Temperatures = temperaturesTask.Result.Where(t => t.CityKey == city.Key).Select(t => new CityTemperatureDto
+                    {
+                        Temperature = t.Temperature,
+                        CreatedOn = t.CreatedOn.ToString("s")
+                    })
+                    .OrderBy(i => i.CreatedOn)
+                    .ToList()
+                })
+                .OrderBy(i => i.City)
+                .ToList(),
             };
         }
     }

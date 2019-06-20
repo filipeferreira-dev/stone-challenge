@@ -21,22 +21,22 @@ namespace Presentation.Api.Controllers
         [Route("")]
         public async Task<IActionResult> AddCityAsync([FromBody] AddCityRequestDto postalCodeDto)
         {
-            var resultDto = await CityService.AddCityAsync(postalCodeDto.PostalCode);
+            var result = await CityService.AddCityAsync(postalCodeDto.PostalCode);
 
-            if (!resultDto.Success.Value) return BadRequest(resultDto);
+            if (result.Success.HasValue && !result.Success.Value) return BadRequest(result);
 
-            return Ok(resultDto);
+            return Ok(result);
         }
 
         [HttpDelete]
         [Route("{key}")]
         public async Task<IActionResult> RemoveAsync([FromRoute]Guid key)
         {
-            var resultDto = await CityService.RemoveAsync(key);
+            var result = await CityService.RemoveAsync(key);
 
-            if (!resultDto.Success.Value) return BadRequest(resultDto);
+            if (result.Success.HasValue && !result.Success.Value) return BadRequest(result);
 
-            return Ok(resultDto);
+            return Ok(result);
         }
 
         [HttpGet]
@@ -53,17 +53,15 @@ namespace Presentation.Api.Controllers
         {
             var result = await CityService.AddTemperatureAsync(key, temperatureRequestDto);
 
-            if (!result.Success.Value) return BadRequest(result);
+            if (result.Success.HasValue && !result.Success.Value) return BadRequest(result);
             return Ok(result);
         }
 
         [HttpGet]
-        [Route("{key}/temperatures")]
-        public async Task<IActionResult> GetTemperatureAsyncByCity([FromRoute] Guid key)
+        [Route("temperatures")]
+        public async Task<IActionResult> GetTemperatureAsyncByCity()
         {
-            var result = await CityService.GetCityByKeyWithTemperatures(key);
-
-            if (result.Success.HasValue && !result.Success.Value) return BadRequest(result);
+            var result = await CityService.GetAllWithTemperaturesAsync();
             return Ok(result);
         }
     }

@@ -9,7 +9,7 @@ namespace Domain.Repositories
     {
         Task<IList<CityTemperature>> GetByCityAsync(Guid cityKey);
 
-        Task<IList<CityTemperature>> GetAll();
+        Task<IList<CityTemperature>> GetAllAsync();
 
         Task AddAsync(CityTemperature cityTemperature);
     }

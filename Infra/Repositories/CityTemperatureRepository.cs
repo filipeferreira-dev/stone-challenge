@@ -41,9 +41,37 @@ namespace Infra.Repositories
             }
         }
 
-        public Task<IList<CityTemperature>> GetAll()
+        public async Task<IList<CityTemperature>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            const string getByCityCommand =
+                @"select [Key], [CityKey], [Temperature], [CreatedOn] from CityTemperature where [DeletedAt] is null and [CreatedOn] > @dateFilter";
+
+            using (var connection = GetConnection())
+            {
+                try
+                {
+                    using (var command = connection.CreateCommand())
+                    {
+                        command.CommandText = getByCityCommand;
+                        command.Parameters.Add(CreateParameter("@dateFilter", SqlDbType.DateTime, DateTime.UtcNow.AddHours(-24)));
+                        connection.Open();
+                        command.Prepare();
+
+                        using (var reader = await command.ExecuteReaderAsync())
+                        {
+                            var result = new List<CityTemperature>();
+
+                            while (await reader.ReadAsync()) result.Add(MapToCityTemperature(reader));
+
+                            return result;
+                        }
+                    }
+                }
+                finally
+                {
+                    connection.Close();
+                }
+            }
         }
 
         public async Task<IList<CityTemperature>> GetByCityAsync(Guid cityKey)

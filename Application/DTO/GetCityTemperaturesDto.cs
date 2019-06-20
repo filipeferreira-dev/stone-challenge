@@ -2,6 +2,6 @@
 {
     public class GetCityTemperaturesDto : ResponseDto
     {
-        public CityDto Data { get; set; }
+        public CityWithTemperatureDto Data { get; set; }
     }
 }

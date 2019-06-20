@@ -17,6 +17,8 @@ namespace Domain.Repositories
 
         Task<IList<City>> GetAllAsync(int recordsPerPage, int page);
 
+        Task<IList<City>> GetAllAsync();
+
         Task<int> CountAsync(); 
     }
 }
