@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Threading.Tasks;
 using CrossCutting.Settings;
 using Domain.Entities;
@@ -45,9 +46,48 @@ namespace Infra.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<IList<CityTemperature>> GetByCity(Guid cityKey)
+        public async Task<IList<CityTemperature>> GetByCityAsync(Guid cityKey)
         {
-            throw new NotImplementedException();
+            const string getByCityCommand =
+                @"select [Key], [CityKey], [Temperature], [CreatedOn] from CityTemperature where [CityKey] = @cityKey and [DeletedAt] is null and [CreatedOn] > @dateFilter order by [CreatedOn]";
+
+            using (var connection = GetConnection())
+            {
+                try
+                {
+                    using (var command = connection.CreateCommand())
+                    {
+                        command.CommandText = getByCityCommand;
+                        command.Parameters.Add(CreateParameter("@cityKey", SqlDbType.UniqueIdentifier, cityKey));
+                        command.Parameters.Add(CreateParameter("@dateFilter", SqlDbType.DateTime, DateTime.UtcNow.AddHours(-24)));
+                        connection.Open();
+                        command.Prepare();
+
+                        using (var reader = await command.ExecuteReaderAsync())
+                        {
+                            var result = new List<CityTemperature>();
+
+                            while (await reader.ReadAsync()) result.Add(MapToCityTemperature(reader));
+
+                            return result;
+                        }
+                    }
+                }
+                finally
+                {
+                    connection.Close();
+                }
+            }
         }
+
+        private CityTemperature MapToCityTemperature(SqlDataReader reader)
+            => new CityTemperature
+            (
+                reader.GetGuid(reader.GetOrdinal("Key")),
+                reader.GetGuid(reader.GetOrdinal("CityKey")),
+                reader.GetInt32(reader.GetOrdinal("Temperature")),
+                reader.GetDateTime(reader.GetOrdinal("CreatedOn"))
+            );
+
     }
 }

@@ -17,11 +17,9 @@ namespace Domain.Entities
             PostalCode = postalCode;
         }
 
-        public City(Guid key, string name, string postalCode, DateTime createdOn)
+        public City(Guid key, string name, string postalCode, DateTime createdOn) : this(name, postalCode)
         {
             Key = key;
-            Name = name;
-            PostalCode = postalCode;
             CreatedOn = createdOn;
         }
     }

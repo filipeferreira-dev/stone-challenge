@@ -100,6 +100,28 @@ namespace Application.Services
             };
         }
 
+        public async Task<GetCityTemperaturesDto> GetCityByKeyWithTemperatures(Guid cityKey)
+        {
+            var city = await CityRepository.GetByKeyAsync(cityKey);
+            if (city == null) return new GetCityTemperaturesDto { Success = false, Message = "City not found." };
+
+            var temperatures = await CityTemperatureRepository.GetByCityAsync(city.Key);
+
+            return new GetCityTemperaturesDto
+            {
+                Data = new CityDto
+                {
+                    Name = city.Name,
+                    Temperatures = temperatures.Select(t => new CityTemperatureDto
+                    {
+                        Temperature = t.Temperature,
+                        CreatedOn = t.CreatedOn.ToString("s")
+                    })
+                    .ToList()
+                }
+            };
+        }
+
         public async Task<AddTemperatureResponseDto> AddTemperatureAsync(Guid cityKey, AddTemperatureRequestDto addTemperatureRequestDto)
         {
             var city = await CityRepository.GetByKeyAsync(cityKey);

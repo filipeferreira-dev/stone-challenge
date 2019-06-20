@@ -1,6 +1,6 @@
-﻿using Application.DTO;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using Application.DTO;
 
 namespace Application.Services.Interfaces
 {
@@ -13,5 +13,7 @@ namespace Application.Services.Interfaces
         Task<GetAllCityResponseDto> GetAllAsync(PagingDto paging);
 
         Task<AddTemperatureResponseDto> AddTemperatureAsync(Guid cityKey, AddTemperatureRequestDto addTemperatureRequestDto);
+
+        Task<GetCityTemperaturesDto> GetCityByKeyWithTemperatures(Guid cityKey);
     }
 }

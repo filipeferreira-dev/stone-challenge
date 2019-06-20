@@ -13,5 +13,11 @@ namespace Domain.Entities
             Temperature = temperature;
             CityKey = cityKey;
         }
+
+        public CityTemperature(Guid key, Guid cityKey, int temperature, DateTime createdOn) : this(cityKey, temperature)
+        {
+            Key = key;
+            CreatedOn = createdOn;
+        }
     }
 }

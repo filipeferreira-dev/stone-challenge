@@ -56,5 +56,15 @@ namespace Presentation.Api.Controllers
             if (!result.Success.Value) return BadRequest(result);
             return Ok(result);
         }
+
+        [HttpGet]
+        [Route("{key}/temperatures")]
+        public async Task<IActionResult> GetTemperatureAsyncByCity([FromRoute] Guid key)
+        {
+            var result = await CityService.GetCityByKeyWithTemperatures(key);
+
+            if (result.Success.HasValue && !result.Success.Value) return BadRequest(result);
+            return Ok(result);
+        }
     }
 }
