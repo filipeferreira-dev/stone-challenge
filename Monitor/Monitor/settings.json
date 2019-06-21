@@ -1,0 +1,6 @@
+﻿{
+    "Interval" : "60000",
+    "ApiSettings" :  {
+        "Uri": "https://localhost:5001"
+    }
+}
