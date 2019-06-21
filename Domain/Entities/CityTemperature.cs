@@ -8,6 +8,9 @@ namespace Domain.Entities
 
         public Guid CityKey { get; private set; }
 
+        [Obsolete("Creted for tests purpose", true)]
+        public CityTemperature() { }
+
         public CityTemperature(Guid cityKey, int temperature)
         {
             Temperature = temperature;

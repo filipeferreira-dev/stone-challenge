@@ -193,5 +193,84 @@ namespace Application.Tests.Services
         }
 
         #endregion
+
+        #region Get City With Temperatures
+
+        [Test(Description = "Should return false on try get temperature with invalid city key")]
+        public async Task OnGetCityTemperatureAsyncWithInvalidKey()
+        {
+            var key = Guid.NewGuid();
+
+            CityRepository.GetByKeyAsync(Arg.Any<Guid>()).Returns(Task.FromResult<City>(null));
+
+            var result = await CityService.GetCityByKeyWithTemperaturesAsync(key);
+
+            result.Success.Should().BeFalse();
+        }
+
+        [Test(Description = "Should return true on get temperature by city")]
+        public async Task OnGetCityTemperatureAsync()
+        {
+            var key = Guid.NewGuid();
+            var city = Builder<City>.CreateNew().Build();
+            var temperatures = Builder<CityTemperature>.CreateListOfSize(3).Build();
+
+            CityRepository.GetByKeyAsync(Arg.Any<Guid>()).Returns(city);
+            CityTemperatureRepository.GetByCityAsync(Arg.Any<Guid>()).Returns(temperatures);
+
+            var result = await CityService.GetCityByKeyWithTemperaturesAsync(key);
+
+            result.Success.Should().BeNull();
+            result.Data.Temperatures.Should().HaveCount(3);
+        }
+
+        #endregion
+
+        #region Get All Cities With Temperatures
+
+        [Test(Description = "Should return data when get all cities with temperatures")]
+        public async Task OnGetAllWithTemperaturesAsync()
+        {
+            var cities = Builder<City>.CreateListOfSize(10).Build();
+            var temperatures = Builder<CityTemperature>.CreateListOfSize(10).Build();
+
+            CityRepository.GetAllAsync().Returns(cities);
+            CityTemperatureRepository.GetAllAsync().Returns(temperatures);
+
+            var result = await CityService.GetAllWithTemperaturesAsync();
+
+            result.Data.Should().HaveCount(10);
+        }
+
+        #endregion
+
+        #region On Remove city temperatures
+
+        [Test(Description = "Should return false on try remove temperatures with invalid city key")]
+        public async Task OnRemoveTemperaturesByCityAsyncWithInvalidKey()
+        {
+            var key = Guid.NewGuid();
+
+            CityRepository.GetByKeyAsync(Arg.Any<Guid>()).Returns(Task.FromResult<City>(null));
+
+            var result = await CityService.RemoveTemperaturesByCityAsync(key);
+
+            result.Success.Should().BeFalse();
+        }
+
+        [Test(Description = "Should return true on remove temperatures with from a city")]
+        public async Task OnRemoveTemperaturesByCityAsync()
+        {
+            var key = Guid.NewGuid();
+            var city = Builder<City>.CreateNew().Build();
+
+            CityRepository.GetByKeyAsync(Arg.Any<Guid>()).Returns(city);
+
+            var result = await CityService.RemoveTemperaturesByCityAsync(key);
+
+            result.Success.Should().BeTrue();
+        }
+
+        #endregion
     }
 }
